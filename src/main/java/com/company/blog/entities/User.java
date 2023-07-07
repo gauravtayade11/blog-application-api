@@ -47,6 +47,7 @@ public class User {
 //    private List<Post> posts = new ArrayList<>();
 
 
+    @JsonBackReference
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 //    @JoinColumn(name = "id",
 //    referencedColumnName = "id")

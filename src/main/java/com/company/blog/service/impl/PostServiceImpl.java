@@ -36,15 +36,61 @@ public class PostServiceImpl implements PostService {
         newPost.setCategory(category);
         newPost.setPostTitle(post.getPostTitle());
         newPost.setPostContent(post.getPostContent());
-        return newPost;
+        return postRepo.save(newPost);
     }
 
     @Override
     public List<Post> getPostByUser(long id) {
 
-        User user = userRepository.findById(id).orElseThrow(()-> new ResourceNotFound("User Not Found"));
+        User user = userRepository.findById(id).orElseThrow(()-> new ResourceNotFound("User Not Found with User Id = "+id));
         List<Post> posts = postRepo.findByUser(user);
         return posts;
+    }
+
+    @Override
+    public List<Post> getPostByCategory(long categoryId) {
+        Category category = categoryRepo.findById(categoryId).orElseThrow(()-> new ResourceNotFound("Category not found with the id = "+ categoryId));
+
+        List<Post> posts = postRepo.findByCategory(category);
+        return posts;
+
+    }
+
+    @Override
+    public String deletePostById(long postId) {
+        Post post = postRepo.findById(postId).orElse(null);
+        if(post != null){
+            postRepo.deleteById(postId);
+        }else throw new ResourceNotFound("Post Not Found with id = "+ postId);
+
+//        postRepo.deleteById(post);
+        return "deleted succesfull";
+    }
+
+    @Override
+    public Post updatePost(Post post, long postId) {
+
+        Post postupdate = postRepo.findById(postId).orElseThrow(()-> new ResourceNotFound("Post not found with id = "+ postId));
+        if(postupdate!=null){
+            if(post.getPostTitle()!=null){
+                postupdate.setPostTitle(post.getPostTitle());
+            }
+
+            if(post.getPostContent()!=null){
+                postupdate.setPostContent(post.getPostContent());
+            }
+        }
+        return postRepo.save(postupdate);
+    }
+
+    @Override
+    public List<Post> getAllPost() {
+        return postRepo.findAll();
+    }
+
+    @Override
+    public Post getPostById(long postId) {
+        return postRepo.findById(postId).orElseThrow(()->new ResourceNotFound("Post not found with id = "+ postId));
     }
 
 
