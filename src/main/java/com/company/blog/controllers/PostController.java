@@ -1,6 +1,7 @@
 package com.company.blog.controllers;
 
 import com.company.blog.entities.Post;
+import com.company.blog.payloads.PostResponse;
 import com.company.blog.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -41,8 +42,14 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public List<Post> gettAllPost(){
-        return postService.getAllPost();
+    public PostResponse gettAllPost(
+            @RequestParam(value = "pageNumber",defaultValue = "0",required = false) int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "3",required = false)int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "postId",required = false) String sortBy,
+            @RequestParam(value = "sortDir",defaultValue = "asc",required = false) String sortDir
+    ){
+         PostResponse allPost = postService.getAllPost(pageNumber,pageSize,sortBy,sortDir);
+         return allPost;
     }
 
     @GetMapping("/post/{postId}")
